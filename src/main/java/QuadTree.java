@@ -1,5 +1,3 @@
-import sun.plugin.dom.exception.InvalidStateException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class QuadTree {
 
         Node root = this.root_;
         if (x < root.getX() || y < root.getY() || x > root.getX() + root.getW() || y > root.getY() + root.getH()) {
-            throw new InvalidStateException("Out of bounds : (" + x + ", " + y + ")");
+            throw new QuadTreeException("Out of bounds : (" + x + ", " + y + ")");
         }
         if (this.insert_(root, new Point(x, y, value))) {
             this.count_++;
@@ -184,7 +182,7 @@ public class QuadTree {
                 break;
 
             default:
-                throw new InvalidStateException("Invalid nodeType");
+                throw new QuadTreeException("Invalid nodeType");
         }
         return resposne;
     }
@@ -211,7 +209,7 @@ public class QuadTree {
                 break;
 
             default:
-                throw new InvalidStateException("Invalid nodeType in parent");
+                throw new QuadTreeException("Invalid nodeType in parent");
         }
         return result;
     }
@@ -318,7 +316,7 @@ public class QuadTree {
 
     private void setPointForNode_(Node node, Point point) {
         if (node.getNodeType() == NodeType.POINTER) {
-            throw new InvalidStateException("Can not set point for node of type POINTER");
+            throw new QuadTreeException("Can not set point for node of type POINTER");
         }
         node.setNodeType(NodeType.LEAF);
         node.setPoint(point);
