@@ -54,8 +54,15 @@ public class Point implements Comparable {
             return -1;
         } else if (this.x > tmp.x) {
             return 1;
+        } else {
+            if (this.y < tmp.y) {
+                return -1;
+            } else if (this.y > tmp.y) {
+                return 1;
+            }
+            return 0;
         }
-        return 0;
+
     }
 
 }
