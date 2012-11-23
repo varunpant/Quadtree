@@ -102,7 +102,7 @@ public class QuadTree {
 
     public Point[] searchIntersect(final double xmin, final double ymin, final double xmax, final double ymax) {
         final List<Point> arr = new ArrayList<Point>();
-        this.traverse_(this.root_, new Func() {
+        this.navigate(this.root_, new Func() {
             @Override
             public void call(QuadTree quadTree, Node node) {
                 Point pt = node.getPoint();
@@ -113,13 +113,13 @@ public class QuadTree {
                 }
 
             }
-        });
+        }, xmin, ymin, xmax, ymax);
         return arr.toArray(new Point[arr.size()]);
     }
 
     public Point[] searchWithin(final double xmin, final double ymin, final double xmax, final double ymax) {
         final List<Point> arr = new ArrayList<Point>();
-        this.traverse_(this.root_, new Func() {
+        this.navigate(this.root_, new Func() {
             @Override
             public void call(QuadTree quadTree, Node node) {
                 Point pt = node.getPoint();
@@ -127,8 +127,34 @@ public class QuadTree {
                     arr.add(node.getPoint());
                 }
             }
-        });
+        }, xmin, ymin, xmax, ymax);
         return arr.toArray(new Point[arr.size()]);
+    }
+
+    public void navigate(Node node, Func func, double xmin, double ymin, double xmax, double ymax) {
+        switch (node.getNodeType()) {
+            case LEAF:
+                func.call(this, node);
+                break;
+
+            case POINTER:
+                if (intersects(xmin, ymax, xmax, ymin, node.getNe()))
+                    this.navigate(node.getNe(), func, xmin, ymin, xmax, ymax);
+                if (intersects(xmin, ymax, xmax, ymin, node.getSe()))
+                    this.navigate(node.getSe(), func, xmin, ymin, xmax, ymax);
+                if (intersects(xmin, ymax, xmax, ymin, node.getSw()))
+                    this.navigate(node.getSw(), func, xmin, ymin, xmax, ymax);
+                if (intersects(xmin, ymax, xmax, ymin, node.getNw()))
+                    this.navigate(node.getNw(), func, xmin, ymin, xmax, ymax);
+                break;
+        }
+    }
+	
+	private boolean intersects(double left, double bottom, double right, double top, Node node) {
+        return !(node.getX() > right ||
+                (node.getX() + node.getW()) < left ||
+                node.getY() > bottom ||
+                (node.getY()+ node.getH())  < top);
     }
 
     public QuadTree clone() {
