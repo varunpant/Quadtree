@@ -9,8 +9,7 @@ public class Point implements Comparable {
      *
      * @param {double} x The x-coordinate of the point.
      * @param {double} y The y-coordinate of the point.
-     * @param {Object} opt_value Optional value associated with the point.
-     * @constructor
+     * @param {Object} opt_value Optional value associated with the point.     
      */
     public Point(double x, double y, Object opt_value) {
         this.x = x;
