@@ -1,3 +1,5 @@
+package com.github.varunpant.quadtree;
+
 public class Point implements Comparable {
 
     private double x;

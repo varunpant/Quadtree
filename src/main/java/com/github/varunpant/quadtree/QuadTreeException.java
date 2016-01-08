@@ -1,3 +1,4 @@
+package com.github.varunpant.quadtree;
 
 public class QuadTreeException extends RuntimeException {
 
