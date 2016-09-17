@@ -1,3 +1,5 @@
+package com.github.varunpant.quadtree;
+
 import org.junit.Test;
 
 import java.util.Arrays;
