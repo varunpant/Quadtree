@@ -1,6 +1,6 @@
 package com.github.varunpant.quadtree;
 
-public class Point implements Comparable {
+public class Point implements Comparable<Point> {
 
     private double x;
     private double y;
@@ -11,7 +11,7 @@ public class Point implements Comparable {
      *
      * @param {double} x The x-coordinate of the point.
      * @param {double} y The y-coordinate of the point.
-     * @param {Object} opt_value Optional value associated with the point.     
+     * @param {Object} opt_value Optional value associated with the point.
      */
     public Point(double x, double y, Object opt_value) {
         this.x = x;
@@ -49,16 +49,15 @@ public class Point implements Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        Point tmp = (Point) o;
-        if (this.x < tmp.x) {
+    public int compareTo(Point point) {
+        if (this.x < point.x) {
             return -1;
-        } else if (this.x > tmp.x) {
+        } else if (this.x > point.x) {
             return 1;
         } else {
-            if (this.y < tmp.y) {
+            if (this.y < point.y) {
                 return -1;
-            } else if (this.y > tmp.y) {
+            } else if (this.y > point.y) {
                 return 1;
             }
             return 0;
