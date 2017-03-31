@@ -12,14 +12,14 @@ import static org.junit.Assert.assertEquals;
 
 public class SpatialTest {
 
-    static List<Point> _pointList = null;
+    static List<Point<Double>> _pointList = null;
 
     private void LoadPointsFromFile(String source) {
         String[] item;
         String[] lines = readAllTextFileLines(source);
         for (String line : lines) {
             item = line.split(",");
-            _pointList.add(new Point(Double.parseDouble(item[2]), Double.parseDouble(item[1]), Double.parseDouble(item[0])));
+            _pointList.add(new Point<Double>(Double.parseDouble(item[2]), Double.parseDouble(item[1]), Double.parseDouble(item[0])));
         }
     }
 
@@ -46,19 +46,19 @@ public class SpatialTest {
 
     @Test
     public void testTree(){
-        _pointList = new ArrayList<Point>();
+        _pointList = new ArrayList<Point<Double>>();
         URL classpathResource = Thread.currentThread().getContextClassLoader().getResource("");
         String resourcePath = classpathResource.getPath()+"points.txt";
         LoadPointsFromFile(resourcePath);
         assertEquals("Expecting 844 points",844,_pointList.size());
 
         //http://spatialreference.org/ref/epsg/4326/
-        QuadTree qt = new QuadTree(-180.000000, -90.000000, 180.000000, 90.000000);
-        for(Point pt:_pointList)
+        QuadTree<Double> qt = new QuadTree<Double>(-180.000000, -90.000000, 180.000000, 90.000000);
+        for(Point<Double> pt:_pointList)
         {
             qt.set(pt.getX(), pt.getY(), pt.getValue());
         }
-        Point[] points = qt.searchIntersect(-84.375,27.059,-78.75,31.952 );
+        Point<Double>[] points = qt.searchIntersect(-84.375,27.059,-78.75,31.952 );
         //System.out.print( Arrays.asList(points).toString());
         assertEquals(60,points.length);
 

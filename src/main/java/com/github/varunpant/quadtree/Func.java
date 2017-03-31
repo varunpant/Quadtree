@@ -1,5 +1,5 @@
 package com.github.varunpant.quadtree;
 
-public interface Func {
-    public void call(QuadTree quadTree, Node node);
+public interface Func<T> {
+    public void call(QuadTree<T> quadTree, Node<T> node);
 }
