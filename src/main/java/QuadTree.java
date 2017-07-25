@@ -277,23 +277,23 @@ public class QuadTree {
      * @private
      */
     public Node find(Node node, double x, double y) {
-        Node resposne = null;
+        Node response = null;
         switch (node.getNodeType()) {
             case EMPTY:
                 break;
 
             case LEAF:
-                resposne = node.getPoint().getX() == x && node.getPoint().getY() == y ? node : null;
+                response = node.getPoint().getX() == x && node.getPoint().getY() == y ? node : null;
                 break;
 
             case POINTER:
-                resposne = this.find(this.getQuadrantForPoint(node, x, y), x, y);
+                response = this.find(this.getQuadrantForPoint(node, x, y), x, y);
                 break;
 
             default:
                 throw new QuadTreeException("Invalid nodeType");
         }
-        return resposne;
+        return response;
     }
 
     /**
