@@ -1,17 +1,19 @@
-public class Point implements Comparable {
+package com.github.varunpant.quadtree;
+
+public class Point<T> implements Comparable<Point<T>> {
 
     private double x;
     private double y;
-    private Object opt_value;
+    private T opt_value;
 
     /**
      * Creates a new point object.
      *
      * @param {double} x The x-coordinate of the point.
      * @param {double} y The y-coordinate of the point.
-     * @param {Object} opt_value Optional value associated with the point.     
+     * @param {T} opt_value Optional value associated with the point.
      */
-    public Point(double x, double y, Object opt_value) {
+    public Point(double x, double y, T opt_value) {
         this.x = x;
         this.y = y;
         this.opt_value = opt_value;
@@ -33,11 +35,11 @@ public class Point implements Comparable {
         this.y = y;
     }
 
-    public Object getValue() {
+    public T getValue() {
         return opt_value;
     }
 
-    public void setValue(Object opt_value) {
+    public void setValue(T opt_value) {
         this.opt_value = opt_value;
     }
 
@@ -47,16 +49,15 @@ public class Point implements Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        Point tmp = (Point) o;
-        if (this.x < tmp.x) {
+    public int compareTo(Point<T> point) {
+        if (this.x < point.x) {
             return -1;
-        } else if (this.x > tmp.x) {
+        } else if (this.x > point.x) {
             return 1;
         } else {
-            if (this.y < tmp.y) {
+            if (this.y < point.y) {
                 return -1;
-            } else if (this.y > tmp.y) {
+            } else if (this.y > point.y) {
                 return 1;
             }
             return 0;

@@ -1,11 +1,15 @@
+package com.github.varunpant.quadtree;
+
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class QuadTreeTest extends junit.framework.TestCase {
 
-    private QuadTree getTree() {
-        QuadTree qt = new QuadTree(0, 0, 100, 100);
+    private QuadTree<String> getTree() {
+        QuadTree<String> qt = new QuadTree<String>(0, 0, 100, 100);
         qt.set(5, 20, "Foo");
         qt.set(50, 32, "Bar");
         qt.set(47, 96, "Baz");
@@ -14,8 +18,8 @@ public class QuadTreeTest extends junit.framework.TestCase {
         return qt;
     }
 
-    private void assertTreesChildrenAreNull(QuadTree qt) {
-        Node root = qt.getRootNode();
+    private <T> void assertTreesChildrenAreNull(QuadTree<T> qt) {
+        Node<T> root = qt.getRootNode();
         assertNull("NE should be null", root.getNe());
         assertNull("NW should be null", root.getNw());
         assertNull("SE should be null", root.getSe());
@@ -24,7 +28,7 @@ public class QuadTreeTest extends junit.framework.TestCase {
 
     @Test
     public void testGetCount() {
-        QuadTree qt = getTree();
+        QuadTree<String> qt = getTree();
         assertEquals("Count should be 5", 5, qt.getCount());
         qt.remove(50, 32);
         assertEquals("Count should be 4", 4, qt.getCount());
@@ -32,7 +36,7 @@ public class QuadTreeTest extends junit.framework.TestCase {
 
     @Test
     public void testGetKeys() {
-        Point[] keys = getTree().getKeys();
+        Point<String>[] keys = getTree().getKeys();
         Arrays.sort(keys);
         String keyString = Arrays.asList(keys).toString();
         String expected = "[(5.0, 20.0), (12.0, 0.0), (47.0, 96.0), (50.0, 32.0), (50.0, 50.0)]";
@@ -41,43 +45,43 @@ public class QuadTreeTest extends junit.framework.TestCase {
 
     @Test
     public void testGetValues() {
-        Object[] values = getTree().getValues();
-        Arrays.sort(values);
-        String valueString = Arrays.asList(values).toString();
+        List<String> values = getTree().getValues();
+        Collections.sort(values);
+        String valueString = values.toString();
         assertEquals("Sorted values should be [Bar, Baz, Bing, Bong, Foo]", "[Bar, Baz, Bing, Bong, Foo]", valueString);
     }
 
     @Test
     public void testContains() {
-        QuadTree qt = getTree();
+        QuadTree<String> qt = getTree();
         assertTrue("Should contain (5, 20)", qt.contains(5, 20));
         assertFalse("Should not contain (13, 13)", qt.contains(13, 13));
     }
 
     @Test
     public void testSearchIntersects() {
-        QuadTree qt = getTree();
-        Point[] points = qt.searchIntersect(4, 0, 51, 98);
+        QuadTree<String> qt = getTree();
+        Point<String>[] points = qt.searchIntersect(4, 0, 51, 98);
         Arrays.sort(points);
         String keyString = Arrays.asList(points).toString();
         String expected = "[(5.0, 20.0), (12.0, 0.0), (47.0, 96.0), (50.0, 32.0), (50.0, 50.0)]";
         assertEquals("Sorted keys should be " + expected, expected, keyString);
 
 
-        Point[] points2 = qt.searchIntersect(5, 0, 50, 96);
+        Point<String>[] points2 = qt.searchIntersect(5, 0, 50, 96);
         Arrays.sort(points2);
         String keyString2 = Arrays.asList(points).toString();
         String expected2 = "[(5.0, 20.0), (12.0, 0.0), (47.0, 96.0), (50.0, 32.0), (50.0, 50.0)]";
         assertEquals("Sorted keys should be " + expected2, expected2, keyString2);
 
-        Point[] points3 = qt.searchIntersect(55, 0, 50, 96);
+        Point<String>[] points3 = qt.searchIntersect(55, 0, 50, 96);
         assertEquals("Should return no points for higher x",0,points3.length);
     }
 
     @Test
     public void testSearchWithin() {
-        QuadTree qt = getTree();
-        Point[] points = qt.searchWithin(4, -1, 51, 98);
+        QuadTree<String> qt = getTree();
+        Point<String>[] points = qt.searchWithin(4, -1, 51, 98);
         Arrays.sort(points);
         String keyString = Arrays.asList(points).toString();
         String expected = "[(5.0, 20.0), (12.0, 0.0), (47.0, 96.0), (50.0, 32.0), (50.0, 50.0)]";
@@ -86,7 +90,7 @@ public class QuadTreeTest extends junit.framework.TestCase {
 
     @Test
     public void testClear() {
-        QuadTree qt = getTree();
+        QuadTree<String> qt = getTree();
         qt.clear();
         assertTrue("Tree should be empty", qt.isEmpty());
         assertFalse("Tree should not contain (5, 20)", qt.contains(5, 20));
@@ -94,8 +98,8 @@ public class QuadTreeTest extends junit.framework.TestCase {
 
     @Test
     public void testConstructor() {
-        QuadTree qt = new QuadTree(-10, -5, 6, 12);
-        Node root = qt.getRootNode();
+        QuadTree<?> qt = new QuadTree<Object>(-10, -5, 6, 12);
+        Node<?> root = qt.getRootNode();
         assertEquals("X of root should be -10.0", -10.0, root.getX());
         assertEquals("Y of root should be -5.0", -5.0, root.getY());
         assertEquals("Width of root should be 16.0", 16.0, root.getW());
@@ -105,14 +109,14 @@ public class QuadTreeTest extends junit.framework.TestCase {
 
     @Test
     public void testClone() {
-        QuadTree qt = getTree().clone();
+        QuadTree<String> qt = getTree().clone();
         assertFalse("Clone should not be empty", qt.isEmpty());
         assertTrue("Should contain (47, 96)", qt.contains(47, 96));
     }
 
     @Test
     public void testRemove() {
-        QuadTree qt = getTree();
+        QuadTree<String> qt = getTree();
         assertEquals("(5, 20) should be removed", "Foo", qt.remove(5, 20));
         assertEquals("(5, 20) should be removed", "Bar", qt.remove(50, 32));
         assertEquals("(5, 20) should be removed", "Baz", qt.remove(47, 96));
@@ -125,7 +129,7 @@ public class QuadTreeTest extends junit.framework.TestCase {
 
     @Test
     public void testIsEmpty() {
-        QuadTree qt = getTree();
+        QuadTree<String> qt = getTree();
         qt.clear();
         assertTrue(qt.isEmpty());
         assertEquals("Root should  be empty node", NodeType.EMPTY, qt.getRootNode().getNodeType());
@@ -134,8 +138,8 @@ public class QuadTreeTest extends junit.framework.TestCase {
 
     @Test
     public void testBalancing() {
-        QuadTree qt = new QuadTree(0, 0, 100, 100);
-        Node root = qt.getRootNode();
+        QuadTree<String> qt = new QuadTree<String>(0, 0, 100, 100);
+        Node<String> root = qt.getRootNode();
 
         // Add a point to the NW quadrant.
         qt.set(25, 25, "first");
@@ -168,22 +172,22 @@ public class QuadTreeTest extends junit.framework.TestCase {
 
     @Test
     public void testTreeBounds() {
-        QuadTree qt = getTree();
-        assertFails(qt, new double[]{-10, -10, 1});
-        assertFails(qt, new double[]{-10, 10, 2});
-        assertFails(qt, new double[]{10, -10, 3});
-        assertFails(qt, new double[]{-10, 110, 4});
-        assertFails(qt, new double[]{10, 130, 5});
-        assertFails(qt, new double[]{110, -10, 6});
-        assertFails(qt, new double[]{150, 14, 7});
+        QuadTree<String> qt = getTree();
+        assertFails(qt, -10, -10, "1");
+        assertFails(qt, -10, 10, "2");
+        assertFails(qt, 10, -10, "3");
+        assertFails(qt, -10, 110, "4");
+        assertFails(qt, 10, 130, "5");
+        assertFails(qt, 110, -10, "6");
+        assertFails(qt, 150, 14, "7");
     }
 
-    public void assertFails(QuadTree qt, double[] args) {
+    public <T> void assertFails(QuadTree<T> qt, double x, double y, T value) {
         try {
-            qt.set(args[0], args[1], args[2]);
+            qt.set(x, y, value);
             fail();
         } catch (Exception ex) {
-            assertEquals("Out of bounds : (" + args[0] + ", " + args[1] + ")", ex.getMessage());
+            assertEquals("Out of bounds : (" + x + ", " + y + ")", ex.getMessage());
         }
     }
 }
