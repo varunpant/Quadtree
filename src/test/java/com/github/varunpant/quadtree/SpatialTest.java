@@ -47,8 +47,9 @@ public class SpatialTest {
     @Test
     public void testTree(){
         _pointList = new ArrayList<Point<Double>>();
-        URL classpathResource = Thread.currentThread().getContextClassLoader().getResource("");
-        String resourcePath = classpathResource.getPath()+"points.txt";
+        URL classpathResource = ClassLoader.getSystemClassLoader().getResource("points.txt");
+        String resourcePath = classpathResource.getPath();
+
         LoadPointsFromFile(resourcePath);
         assertEquals("Expecting 844 points",844,_pointList.size());
 

@@ -7,3 +7,6 @@ target/
 .iws
 # Mac crap
 .DS_Store
+build/
+.gradle/
+out/
